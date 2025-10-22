@@ -15,11 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Criar usuário admin
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Administrador',
+            'email' => 'admin@admin.com',
+            'password' => bcrypt('123456789'),
+        ]);
+
+        // Seed das taxas
+        $this->call([
+            TaxaSeeder::class,
         ]);
     }
 }
