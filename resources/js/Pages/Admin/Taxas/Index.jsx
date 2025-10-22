@@ -19,6 +19,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
+import { Switch } from "@/Components/ui/switch";
 import {
     Plus,
     Edit,
@@ -376,19 +377,25 @@ export default function Index({ auth, taxas, flash }) {
                                                 <SelectItem value="todos">
                                                     <div className="flex items-center gap-2">
                                                         <BarChart3 className="w-4 h-4" />
-                                                        <span>Todos os Bens</span>
+                                                        <span>
+                                                            Todos os Bens
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                                 <SelectItem value="carro">
                                                     <div className="flex items-center gap-2">
                                                         <Car className="w-4 h-4" />
-                                                        <span>Apenas Carros</span>
+                                                        <span>
+                                                            Apenas Carros
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                                 <SelectItem value="imovel">
                                                     <div className="flex items-center gap-2">
                                                         <Building2 className="w-4 h-4" />
-                                                        <span>Apenas Imóveis</span>
+                                                        <span>
+                                                            Apenas Imóveis
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                             </SelectContent>
@@ -407,7 +414,9 @@ export default function Index({ auth, taxas, flash }) {
                                                 <SelectItem value="todos">
                                                     <div className="flex items-center gap-2">
                                                         <BarChart3 className="w-4 h-4" />
-                                                        <span>Todas Modalidades</span>
+                                                        <span>
+                                                            Todas Modalidades
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                                 <SelectItem value="consorcio">
@@ -419,7 +428,9 @@ export default function Index({ auth, taxas, flash }) {
                                                 <SelectItem value="financiamento">
                                                     <div className="flex items-center gap-2">
                                                         <CreditCard className="w-4 h-4" />
-                                                        <span>Financiamento</span>
+                                                        <span>
+                                                            Financiamento
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                             </SelectContent>
@@ -438,19 +449,25 @@ export default function Index({ auth, taxas, flash }) {
                                                 <SelectItem value="todos">
                                                     <div className="flex items-center gap-2">
                                                         <BarChart3 className="w-4 h-4" />
-                                                        <span>Todos os Status</span>
+                                                        <span>
+                                                            Todos os Status
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                                 <SelectItem value="ativos">
                                                     <div className="flex items-center gap-2">
                                                         <CheckCircle2 className="w-4 h-4" />
-                                                        <span>Apenas Ativos</span>
+                                                        <span>
+                                                            Apenas Ativos
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                                 <SelectItem value="inativos">
                                                     <div className="flex items-center gap-2">
                                                         <PauseCircle className="w-4 h-4" />
-                                                        <span>Apenas Inativos</span>
+                                                        <span>
+                                                            Apenas Inativos
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                             </SelectContent>
@@ -656,9 +673,7 @@ export default function Index({ auth, taxas, flash }) {
                     isOpen={isCreateModalOpen || isEditModalOpen}
                     onClose={closeModals}
                     title={
-                        isCreateModalOpen
-                            ? "Criar Nova Taxa"
-                            : "Editar Taxa"
+                        isCreateModalOpen ? "Criar Nova Taxa" : "Editar Taxa"
                     }
                     icon={isCreateModalOpen ? Sparkles : Edit}
                 >
@@ -799,32 +814,20 @@ function EmptyState({ icon: Icon, title, description }) {
 function TaxaCard({ taxa, onEdit, onDelete, onToggle, getTipoTaxaIcon }) {
     return (
         <div className="group relative bg-white border-2 rounded-2xl p-5 hover:border-blue-400 hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
-            {/* Status Badge */}
-            <div className="absolute top-4 right-4">
-                <button
-                    onClick={() => onToggle(taxa)}
-                    className="transition-transform hover:scale-110 active:scale-95"
-                    title={
-                        taxa.ativo
-                            ? "Clique para desativar"
-                            : "Clique para ativar"
-                    }
+            {/* Status Switch */}
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+                <span
+                    className={`text-xs font-semibold ${
+                        taxa.ativo ? "text-green-600" : "text-gray-400"
+                    }`}
                 >
-                    {taxa.ativo ? (
-                        <Badge className="bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1 flex items-center gap-1">
-                            <CheckCircle2 className="w-3 h-3" />
-                            Ativo
-                        </Badge>
-                    ) : (
-                        <Badge
-                            variant="secondary"
-                            className="bg-gray-200 hover:bg-gray-300 font-semibold px-3 py-1 flex items-center gap-1"
-                        >
-                            <PauseCircle className="w-3 h-3" />
-                            Inativo
-                        </Badge>
-                    )}
-                </button>
+                    {taxa.ativo ? "Ativo" : "Inativo"}
+                </span>
+                <Switch
+                    checked={taxa.ativo}
+                    onCheckedChange={() => onToggle(taxa)}
+                    className="data-[state=checked]:bg-green-500"
+                />
             </div>
 
             {/* Conteúdo */}
@@ -859,14 +862,54 @@ function TaxaCard({ taxa, onEdit, onDelete, onToggle, getTipoTaxaIcon }) {
                     </Badge>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t-2">
-                    <div>{getTipoTaxaIcon(taxa.tipo_taxa, taxa.valor)}</div>
-                    <Badge variant="outline" className="capitalize font-medium flex items-center gap-1">
-                        {taxa.periodo === "mensal" && <Calendar className="w-3 h-3" />}
-                        {taxa.periodo === "anual" && <CalendarDays className="w-3 h-3" />}
-                        {taxa.periodo === "unico" && <Sparkles className="w-3 h-3" />}
-                        {taxa.periodo || "N/A"}
-                    </Badge>
+                <div className="space-y-3 pt-4 border-t-2">
+                    {/* Valor da Taxa */}
+                    <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-500 font-medium">
+                            Valor
+                        </span>
+                        <div>{getTipoTaxaIcon(taxa.tipo_taxa, taxa.valor)}</div>
+                    </div>
+
+                    {/* Tipo e Período */}
+                    <div className="flex items-center justify-between gap-2">
+                        <Badge
+                            variant="outline"
+                            className={
+                                taxa.tipo_taxa === "percentual"
+                                    ? "bg-orange-50 text-orange-700 border-orange-200 font-semibold flex items-center gap-1"
+                                    : "bg-green-50 text-green-700 border-green-200 font-semibold flex items-center gap-1"
+                            }
+                        >
+                            {taxa.tipo_taxa === "percentual" ? (
+                                <>
+                                    <Percent className="w-3 h-3" />
+                                    Percentual
+                                </>
+                            ) : (
+                                <>
+                                    <DollarSign className="w-3 h-3" />
+                                    Valor Fixo
+                                </>
+                            )}
+                        </Badge>
+
+                        <Badge
+                            variant="outline"
+                            className="capitalize font-medium flex items-center gap-1 bg-blue-50 text-blue-700 border-blue-200"
+                        >
+                            {taxa.periodo === "mensal" && (
+                                <Calendar className="w-3 h-3" />
+                            )}
+                            {taxa.periodo === "anual" && (
+                                <CalendarDays className="w-3 h-3" />
+                            )}
+                            {taxa.periodo === "unico" && (
+                                <Sparkles className="w-3 h-3" />
+                            )}
+                            {taxa.periodo || "N/A"}
+                        </Badge>
+                    </div>
                 </div>
             </div>
 
@@ -1206,25 +1249,47 @@ function TaxaForm({ data, setData, errors }) {
                 </div>
 
                 {/* Ativo */}
-                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border-2">
-                    <input
-                        type="checkbox"
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border-2">
+                    <div className="flex items-center gap-2 flex-1">
+                        {data.ativo ? (
+                            <div className="flex items-center gap-2 text-green-600">
+                                <CheckCircle2 className="w-5 h-5" />
+                                <div>
+                                    <Label
+                                        htmlFor="ativo"
+                                        className="text-base font-semibold cursor-pointer block"
+                                    >
+                                        Taxa Ativa
+                                    </Label>
+                                    <p className="text-xs text-gray-600 mt-0.5">
+                                        Será aplicada nos cálculos da
+                                        calculadora
+                                    </p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2 text-gray-500">
+                                <PauseCircle className="w-5 h-5" />
+                                <div>
+                                    <Label
+                                        htmlFor="ativo"
+                                        className="text-base font-semibold cursor-pointer block"
+                                    >
+                                        Taxa Inativa
+                                    </Label>
+                                    <p className="text-xs text-gray-600 mt-0.5">
+                                        Não será aplicada nos cálculos
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <Switch
                         id="ativo"
                         checked={data.ativo}
-                        onChange={(e) => setData("ativo", e.target.checked)}
-                        className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                        onCheckedChange={(checked) => setData("ativo", checked)}
+                        className="data-[state=checked]:bg-green-500"
                     />
-                    <Label
-                        htmlFor="ativo"
-                        className="text-base font-semibold cursor-pointer flex-1 flex items-center gap-2"
-                    >
-                        {data.ativo ? (
-                            <PlayCircle className="w-4 h-4 text-green-600" />
-                        ) : (
-                            <PauseCircle className="w-4 h-4 text-gray-400" />
-                        )}
-                        Taxa ativa (será aplicada nos cálculos)
-                    </Label>
                 </div>
             </div>
         </>

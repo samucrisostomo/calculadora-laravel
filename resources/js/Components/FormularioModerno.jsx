@@ -51,7 +51,7 @@ const FormularioModerno = ({
                       label: "Lance",
                       placeholder: "Ex: 5.000 (opcional)",
                       icon: TrendingUp,
-                      info: `Valor de lance para antecipar contemplação (máx. ${config.lanceMaximoPercentual}%)`,
+                      info: "Valor de lance para antecipar contemplação",
                       required: false,
                   },
                   {
@@ -80,7 +80,7 @@ const FormularioModerno = ({
                           tipoBem === "carro" ? "5.000" : "100.000"
                       }`,
                       icon: DollarSign,
-                      info: `Valor da entrada inicial (mín. ${config.entradaMinimaPercentual}%, máx. 80%)`,
+                      info: "Valor da entrada inicial",
                       required: true,
                   },
                   {
