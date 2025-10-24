@@ -270,14 +270,6 @@ export default function Index({ auth, taxas, flash }) {
                             tempo real
                         </p>
                     </div>
-                    <Button
-                        onClick={openCreateModal}
-                        size="lg"
-                        className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all"
-                    >
-                        <Plus className="w-5 h-5" />
-                        Nova Taxa
-                    </Button>
                 </div>
             }
         >

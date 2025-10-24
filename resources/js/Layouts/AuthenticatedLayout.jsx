@@ -37,6 +37,14 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Taxas
                                 </NavLink>
                                 <NavLink
+                                    href={route("admin.vantagens.index")}
+                                    active={route().current(
+                                        "admin.vantagens.*"
+                                    )}
+                                >
+                                    Vantagens
+                                </NavLink>
+                                <NavLink
                                     href={route("calculadora")}
                                     active={route().current("calculadora")}
                                 >
@@ -151,6 +159,12 @@ export default function AuthenticatedLayout({ header, children }) {
                             active={route().current("admin.taxas.*")}
                         >
                             Taxas
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("admin.vantagens.index")}
+                            active={route().current("admin.vantagens.*")}
+                        >
+                            Vantagens
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route("calculadora")}

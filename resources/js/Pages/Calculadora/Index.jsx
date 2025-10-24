@@ -34,6 +34,7 @@ export default function CalculadoraIndex() {
     const [calculando, setCalculando] = useState(false);
     const [carregandoTaxas, setCarregandoTaxas] = useState(false);
     const [configTaxas, setConfigTaxas] = useState(null);
+    const [vantagensConsorcio, setVantagensConsorcio] = useState([]);
 
     // Estados para Consórcio
     const [dadosConsorcio, setDadosConsorcio] = useState({
@@ -52,21 +53,26 @@ export default function CalculadoraIndex() {
     });
     const [errosFinanciamento, setErrosFinanciamento] = useState({});
 
-    // Buscar taxas do banco de dados quando o tipo de bem muda
+    // Buscar taxas e vantagens do banco de dados quando o tipo de bem muda
     useEffect(() => {
-        const buscarTaxas = async () => {
+        const buscarDados = async () => {
             setCarregandoTaxas(true);
             try {
-                const response = await axios.get(`/api/taxas/${tipoBem}`);
-                setConfigTaxas(response.data);
+                // Buscar taxas
+                const responseTaxas = await axios.get(`/api/taxas/${tipoBem}`);
+                setConfigTaxas(responseTaxas.data);
+
+                // Buscar vantagens do consórcio
+                const responseVantagens = await axios.get("/api/vantagens");
+                setVantagensConsorcio(responseVantagens.data);
 
                 // Atualiza a taxa de juros do financiamento baseada nas taxas do banco
                 setDadosFinanciamento((prev) => ({
                     ...prev,
-                    taxaAnual: response.data.taxaJurosAnualBase,
+                    taxaAnual: responseTaxas.data.taxaJurosAnualBase,
                 }));
             } catch (error) {
-                console.error("Erro ao buscar taxas:", error);
+                console.error("Erro ao buscar dados:", error);
                 // Fallback para configuração estática se houver erro
                 const configFallback = getConfig(tipoBem);
                 setConfigTaxas(configFallback);
@@ -74,12 +80,35 @@ export default function CalculadoraIndex() {
                     ...prev,
                     taxaAnual: configFallback.taxaJurosAnualBase,
                 }));
+                // Vantagens padrão em caso de erro
+                setVantagensConsorcio([
+                    {
+                        nome: "Sem Juros",
+                        descricao:
+                            "No consórcio você não paga juros compostos. As taxas são transparentes e muito menores.",
+                    },
+                    {
+                        nome: "Parcelas Fixas",
+                        descricao:
+                            "As parcelas permanecem as mesmas do início ao fim, facilitando o planejamento financeiro.",
+                    },
+                    {
+                        nome: "Economia Real",
+                        descricao:
+                            "No final, você pode economizar milhares de reais em comparação ao financiamento tradicional.",
+                    },
+                    {
+                        nome: "Flexibilidade",
+                        descricao:
+                            "Possibilidade de dar lances para antecipar a contemplação e usar o crédito quando precisar.",
+                    },
+                ]);
             } finally {
                 setCarregandoTaxas(false);
             }
         };
 
-        buscarTaxas();
+        buscarDados();
         // Limpa resultados ao mudar o tipo
         setMostrarResultados(false);
     }, [tipoBem]);
@@ -343,42 +372,27 @@ export default function CalculadoraIndex() {
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                                    {[
-                                        {
-                                            title: "Sem Juros",
-                                            desc: "No consórcio você não paga juros compostos. As taxas são transparentes e muito menores.",
-                                        },
-                                        {
-                                            title: "Parcelas Fixas",
-                                            desc: "As parcelas permanecem as mesmas do início ao fim, facilitando o planejamento financeiro.",
-                                        },
-                                        {
-                                            title: "Economia Real",
-                                            desc: "No final, você pode economizar milhares de reais em comparação ao financiamento tradicional.",
-                                        },
-                                        {
-                                            title: "Flexibilidade",
-                                            desc: "Possibilidade de dar lances para antecipar a contemplação e usar o crédito quando precisar.",
-                                        },
-                                    ].map((item, index) => (
-                                        <div
-                                            key={index}
-                                            className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all hover:scale-[1.02] hover-lift animate-fade-in"
-                                            style={{
-                                                animationDelay: `${
-                                                    0.1 * index
-                                                }s`,
-                                            }}
-                                        >
-                                            <h4 className="font-bold text-green-700 mb-2 text-sm sm:text-base flex items-center gap-2">
-                                                <Check className="w-4 h-4 text-green-500" />
-                                                {item.title}
-                                            </h4>
-                                            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
-                                                {item.desc}
-                                            </p>
-                                        </div>
-                                    ))}
+                                    {vantagensConsorcio.map(
+                                        (vantagem, index) => (
+                                            <div
+                                                key={index}
+                                                className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all hover:scale-[1.02] hover-lift animate-fade-in"
+                                                style={{
+                                                    animationDelay: `${
+                                                        0.1 * index
+                                                    }s`,
+                                                }}
+                                            >
+                                                <h4 className="font-bold text-green-700 mb-2 text-sm sm:text-base flex items-center gap-2">
+                                                    <Check className="w-4 h-4 text-green-500" />
+                                                    {vantagem.nome}
+                                                </h4>
+                                                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                                                    {vantagem.descricao}
+                                                </p>
+                                            </div>
+                                        )
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>
