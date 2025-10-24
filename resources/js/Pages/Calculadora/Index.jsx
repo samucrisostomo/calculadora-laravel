@@ -319,6 +319,7 @@ export default function CalculadoraIndex() {
                                 consorcio={resultadoConsorcio}
                                 financiamento={resultadoFinanciamento}
                                 comparacao={comparacao}
+                                configTaxas={configTaxas}
                             />
 
                             <BotaoGerarPDF
@@ -326,6 +327,7 @@ export default function CalculadoraIndex() {
                                 financiamento={resultadoFinanciamento}
                                 comparacao={comparacao}
                                 tipoBem={tipoBem}
+                                configTaxas={configTaxas}
                             />
                         </div>
                     )}

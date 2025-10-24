@@ -44,6 +44,42 @@ class CalculadoraController extends Controller
             'valorMaximoSugerido' => $tipoBem === 'carro' ? 300000 : 2000000,
         ];
 
+        // Adicionar todas as taxas de consórcio dinamicamente
+        // Buscar TODAS as taxas de consórcio ativas para o tipo de bem específico
+        $taxasConsorcio = Taxa::ativo()
+            ->where('modalidade', 'consorcio')
+            ->where('tipo_bem', $tipoBem)
+            ->get();
+
+        $config['taxasConsorcio'] = $taxasConsorcio->map(function ($taxa) {
+            return [
+                'codigo' => $taxa->codigo,
+                'nome' => $taxa->nome,
+                'valor' => $taxa->valor,
+                'tipo_taxa' => $taxa->tipo_taxa,
+                'periodo' => $taxa->periodo,
+                'descricao' => $taxa->descricao,
+            ];
+        })->toArray();
+
+        // Adicionar todas as taxas de financiamento dinamicamente
+        // Buscar TODAS as taxas de financiamento ativas para o tipo de bem específico
+        $taxasFinanciamento = Taxa::ativo()
+            ->where('modalidade', 'financiamento')
+            ->where('tipo_bem', $tipoBem)
+            ->get();
+
+        $config['taxasFinanciamento'] = $taxasFinanciamento->map(function ($taxa) {
+            return [
+                'codigo' => $taxa->codigo,
+                'nome' => $taxa->nome,
+                'valor' => $taxa->valor,
+                'tipo_taxa' => $taxa->tipo_taxa,
+                'periodo' => $taxa->periodo,
+                'descricao' => $taxa->descricao,
+            ];
+        })->toArray();
+
         // Adicionar campos específicos por tipo
         if ($tipoBem === 'carro') {
             $config['taxaLicenciamentoAnual'] = $taxas->where('codigo', 'licenciamento_carro')->first()?->valor ?? 0;
@@ -60,6 +96,7 @@ class CalculadoraController extends Controller
                 ? 'Consórcio ou Financiamento de Veículo'
                 : 'Consórcio ou Financiamento Imobiliário',
         ];
+
 
         return response()->json($config);
     }

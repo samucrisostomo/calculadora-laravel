@@ -7,7 +7,13 @@ import {
     formatarDataHora,
 } from "@/utils/formatters";
 
-const BotaoGerarPDF = ({ consorcio, financiamento, comparacao, tipoBem }) => {
+const BotaoGerarPDF = ({
+    consorcio,
+    financiamento,
+    comparacao,
+    tipoBem,
+    configTaxas,
+}) => {
     const [gerando, setGerando] = useState(false);
 
     const gerarPDF = async () => {
@@ -76,6 +82,25 @@ const BotaoGerarPDF = ({ consorcio, financiamento, comparacao, tipoBem }) => {
                 ],
             ];
 
+            // Adicionar taxas dinâmicas do consórcio
+            if (
+                configTaxas?.taxasConsorcio &&
+                configTaxas.taxasConsorcio.length > 0
+            ) {
+                dadosConsorcio.push(["", ""]); // Linha em branco
+                dadosConsorcio.push(["Taxas Aplicadas (Do Banco):", ""]);
+                configTaxas.taxasConsorcio.forEach((taxa) => {
+                    const valor =
+                        taxa.tipo_taxa === "percentual"
+                            ? `${taxa.valor}% ${taxa.periodo || ""}`
+                            : `R$ ${parseFloat(taxa.valor).toLocaleString(
+                                  "pt-BR",
+                                  { minimumFractionDigits: 2 }
+                              )} ${taxa.periodo || ""}`;
+                    dadosConsorcio.push([`  ${taxa.nome}:`, valor]);
+                });
+            }
+
             dadosConsorcio.forEach(([label, value]) => {
                 pdf.text(label, 25, currentY);
                 pdf.text(value, pageWidth - 25, currentY, { align: "right" });
@@ -115,6 +140,25 @@ const BotaoGerarPDF = ({ consorcio, financiamento, comparacao, tipoBem }) => {
                 ["Taxa Anual:", formatarPercentual(financiamento.taxaAnual)],
                 ["Total de Juros:", formatarMoeda(financiamento.totalJuros)],
             ];
+
+            // Adicionar taxas dinâmicas do financiamento
+            if (
+                configTaxas?.taxasFinanciamento &&
+                configTaxas.taxasFinanciamento.length > 0
+            ) {
+                dadosFinanciamento.push(["", ""]); // Linha em branco
+                dadosFinanciamento.push(["Taxas Aplicadas (Do Banco):", ""]);
+                configTaxas.taxasFinanciamento.forEach((taxa) => {
+                    const valor =
+                        taxa.tipo_taxa === "percentual"
+                            ? `${taxa.valor}% ${taxa.periodo || ""}`
+                            : `R$ ${parseFloat(taxa.valor).toLocaleString(
+                                  "pt-BR",
+                                  { minimumFractionDigits: 2 }
+                              )} ${taxa.periodo || ""}`;
+                    dadosFinanciamento.push([`  ${taxa.nome}:`, valor]);
+                });
+            }
 
             dadosFinanciamento.forEach(([label, value]) => {
                 pdf.text(label, 25, currentY);

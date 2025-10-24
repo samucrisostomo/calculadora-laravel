@@ -14,6 +14,8 @@ Route::get('/', [CalculadoraController::class, 'index'])->name('calculadora');
 Route::get('/api/taxas/{tipoBem}', [CalculadoraController::class, 'getTaxas'])->name('api.taxas');
 Route::get('/api/taxas', [CalculadoraController::class, 'getAllTaxas'])->name('api.taxas.all');
 
+
+
 // Dashboard - redireciona para taxas admin
 Route::get('/dashboard', function () {
     return redirect()->route('admin.taxas.index');

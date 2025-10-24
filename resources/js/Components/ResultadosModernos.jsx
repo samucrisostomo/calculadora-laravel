@@ -17,7 +17,12 @@ import {
     Check,
 } from "lucide-react";
 
-const ResultadosModernos = ({ consorcio, financiamento, comparacao }) => {
+const ResultadosModernos = ({
+    consorcio,
+    financiamento,
+    comparacao,
+    configTaxas,
+}) => {
     if (!consorcio || !financiamento || !comparacao) {
         return null;
     }
@@ -151,6 +156,55 @@ const ResultadosModernos = ({ consorcio, financiamento, comparacao }) => {
                             icon={DollarSign}
                         />
 
+                        {/* Taxas Dinâmicas do Consórcio */}
+                        {configTaxas?.taxasConsorcio &&
+                            configTaxas.taxasConsorcio.length > 0 && (
+                                <>
+                                    <Separator className="my-3" />
+                                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                                        <p className="text-xs font-semibold text-green-700 mb-2 flex items-center gap-1">
+                                            <Sparkles className="w-3 h-3" />
+                                            Taxas Aplicadas (Do Banco)
+                                        </p>
+                                        <div className="space-y-2">
+                                            {configTaxas.taxasConsorcio.map(
+                                                (taxa) => (
+                                                    <div
+                                                        key={taxa.codigo}
+                                                        className="flex justify-between items-center text-xs"
+                                                    >
+                                                        <span className="text-green-600 font-medium">
+                                                            {taxa.nome}
+                                                        </span>
+                                                        <span className="text-green-700 font-bold">
+                                                            {taxa.tipo_taxa ===
+                                                            "percentual"
+                                                                ? `${
+                                                                      taxa.valor
+                                                                  }% ${
+                                                                      taxa.periodo ||
+                                                                      ""
+                                                                  }`
+                                                                : `R$ ${parseFloat(
+                                                                      taxa.valor
+                                                                  ).toLocaleString(
+                                                                      "pt-BR",
+                                                                      {
+                                                                          minimumFractionDigits: 2,
+                                                                      }
+                                                                  )} ${
+                                                                      taxa.periodo ||
+                                                                      ""
+                                                                  }`}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+
                         <Separator className="my-4" />
 
                         <div className="bg-green-100 border-2 border-green-400 rounded-xl p-4">
@@ -216,6 +270,55 @@ const ResultadosModernos = ({ consorcio, financiamento, comparacao }) => {
                                 icon={TrendingUp}
                             />
                         </div>
+
+                        {/* Taxas Dinâmicas do Financiamento */}
+                        {configTaxas?.taxasFinanciamento &&
+                            configTaxas.taxasFinanciamento.length > 0 && (
+                                <>
+                                    <Separator className="my-3" />
+                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                        <p className="text-xs font-semibold text-blue-700 mb-2 flex items-center gap-1">
+                                            <Sparkles className="w-3 h-3" />
+                                            Taxas Aplicadas (Do Banco)
+                                        </p>
+                                        <div className="space-y-2">
+                                            {configTaxas.taxasFinanciamento.map(
+                                                (taxa) => (
+                                                    <div
+                                                        key={taxa.codigo}
+                                                        className="flex justify-between items-center text-xs"
+                                                    >
+                                                        <span className="text-blue-600 font-medium">
+                                                            {taxa.nome}
+                                                        </span>
+                                                        <span className="text-blue-700 font-bold">
+                                                            {taxa.tipo_taxa ===
+                                                            "percentual"
+                                                                ? `${
+                                                                      taxa.valor
+                                                                  }% ${
+                                                                      taxa.periodo ||
+                                                                      ""
+                                                                  }`
+                                                                : `R$ ${parseFloat(
+                                                                      taxa.valor
+                                                                  ).toLocaleString(
+                                                                      "pt-BR",
+                                                                      {
+                                                                          minimumFractionDigits: 2,
+                                                                      }
+                                                                  )} ${
+                                                                      taxa.periodo ||
+                                                                      ""
+                                                                  }`}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
 
                         <Separator className="my-4" />
 

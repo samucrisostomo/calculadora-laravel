@@ -16,6 +16,11 @@ import {
     Info,
     Sprout,
     Building2,
+    Percent,
+    CreditCard,
+    Shield,
+    FileText,
+    Receipt,
 } from "lucide-react";
 import { getConfig } from "@/utils/constants";
 
@@ -99,7 +104,9 @@ const FormularioModerno = ({
                       icon: TrendingUp,
                       info: `Taxa de juros anual aplicada (base: ${
                           config.taxaJurosAnualBase
-                      }% para ${tipoBem === "carro" ? "veículos" : "imóveis"})`,
+                      }% para ${
+                          tipoBem === "carro" ? "veículos" : "imóveis"
+                      } - pode ser alterada para simular diferentes cenários)`,
                       required: true,
                       inputMode: "decimal",
                       suffix: "%",
@@ -260,95 +267,274 @@ const FormularioModerno = ({
                     </div>
                     <div className="space-y-2.5">
                         {tipo === "consorcio" ? (
-                            <>
-                                <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-green-200">
-                                    <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                        <TrendingUp className="w-4 h-4 text-green-600" />
-                                        Taxa Administrativa
-                                    </span>
-                                    <span className="text-sm font-bold text-green-700">
-                                        {config.taxaAdministrativaAnual}% ao ano
-                                    </span>
-                                </div>
-                                <div className="p-3 bg-green-100/50 rounded-lg border border-green-200">
-                                    <p className="text-xs text-green-800 font-medium flex items-center gap-2">
-                                        <Info className="w-3.5 h-3.5" />
-                                        Parcelas fixas durante todo o período
-                                    </p>
-                                </div>
-                            </>
+                            <TaxasConsorcio
+                                config={config}
+                                configTaxas={configTaxas}
+                                valorBem={dados.valorBem || 0}
+                                tipoBem={tipoBem}
+                            />
                         ) : (
-                            <>
-                                <div className="p-3 bg-blue-100/50 rounded-lg border border-blue-200 mb-3">
-                                    <p className="text-xs text-blue-800 font-bold flex items-center gap-2">
-                                        <Info className="w-3.5 h-3.5" />
-                                        Sistema Price (parcelas fixas com juros)
-                                    </p>
-                                </div>
-                                <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
-                                    <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                        <TrendingUp className="w-4 h-4 text-blue-600" />
-                                        Juros Base
-                                    </span>
-                                    <span className="text-sm font-bold text-blue-700">
-                                        {config.taxaJurosAnualBase}% ao ano
-                                    </span>
-                                </div>
-                                <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
-                                    <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                        <Building2 className="w-4 h-4 text-blue-600" />
-                                        Seguro
-                                    </span>
-                                    <span className="text-sm font-bold text-blue-700">
-                                        {config.seguroAnualPercentual}% ao ano
-                                    </span>
-                                </div>
-                                {tipoBem === "imovel" && (
-                                    <>
-                                        <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
-                                            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                                <DollarSign className="w-4 h-4 text-purple-600" />
-                                                Avaliação
-                                            </span>
-                                            <span className="text-sm font-bold text-blue-700">
-                                                {config.taxaAvaliacaoPercentual}
-                                                % (inicial)
-                                            </span>
-                                        </div>
-                                        <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
-                                            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                                <Building2 className="w-4 h-4 text-purple-600" />
-                                                ITBI
-                                            </span>
-                                            <span className="text-sm font-bold text-blue-700">
-                                                {config.itbiPercentual}%
-                                                (inicial)
-                                            </span>
-                                        </div>
-                                    </>
-                                )}
-                                {tipoBem === "carro" && (
-                                    <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
-                                        <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                            <Calendar className="w-4 h-4 text-blue-600" />
-                                            Licenciamento
-                                        </span>
-                                        <span className="text-sm font-bold text-blue-700">
-                                            R${" "}
-                                            {config.taxaLicenciamentoAnual.toLocaleString(
-                                                "pt-BR",
-                                                { minimumFractionDigits: 2 }
-                                            )}
-                                            /ano
-                                        </span>
-                                    </div>
-                                )}
-                            </>
+                            <TaxasFinanciamento
+                                config={config}
+                                configTaxas={configTaxas}
+                                valorBem={dados.valorBem || 0}
+                                tipoBem={tipoBem}
+                            />
                         )}
                     </div>
                 </div>
             </CardContent>
         </Card>
+    );
+};
+
+// Componente para exibir taxas dinâmicas do consórcio
+const TaxasConsorcio = ({ config, configTaxas, valorBem, tipoBem }) => {
+    // Se não há taxas dinâmicas, usa as estáticas
+    if (!configTaxas) {
+        return (
+            <>
+                <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-green-200">
+                    <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                        <TrendingUp className="w-4 h-4 text-green-600" />
+                        Taxa Administrativa
+                    </span>
+                    <span className="text-sm font-bold text-green-700">
+                        {config.taxaAdministrativaAnual}% ao ano
+                    </span>
+                </div>
+                <div className="p-3 bg-green-100/50 rounded-lg border border-green-200">
+                    <p className="text-xs text-green-800 font-medium flex items-center gap-2">
+                        <Info className="w-3.5 h-3.5" />
+                        Parcelas fixas durante todo o período
+                    </p>
+                </div>
+            </>
+        );
+    }
+
+    // Usar taxas dinâmicas do banco de dados se disponíveis
+    const taxasConsorcio = configTaxas.taxasConsorcio || [];
+
+    // Função para obter ícone baseado no tipo de taxa
+    const getIcone = (codigo, tipoTaxa) => {
+        if (codigo.includes("admin")) return TrendingUp;
+        if (codigo.includes("comissao")) return CreditCard;
+        if (codigo.includes("documentacao")) return Building2;
+        if (codigo.includes("registro")) return Calendar;
+        return tipoTaxa === "percentual" ? Percent : DollarSign;
+    };
+
+    // Função para calcular valor da taxa
+    const calcularTaxa = (taxa) => {
+        if (valorBem <= 0) return 0;
+
+        if (taxa.tipo_taxa === "percentual") {
+            return (valorBem * taxa.valor) / 100;
+        } else if (taxa.tipo_taxa === "fixo") {
+            return taxa.valor;
+        }
+        return 0;
+    };
+
+    // Função para formatar período
+    const formatarPeriodo = (periodo) => {
+        if (!periodo) return "";
+        if (periodo === "anual") return "ao ano";
+        if (periodo === "unico") return "único";
+        if (periodo === "mensal") return "ao mês";
+        return periodo;
+    };
+
+    return (
+        <>
+            {taxasConsorcio.length > 0 ? (
+                taxasConsorcio.map((taxa) => {
+                    const Icon = getIcone(taxa.codigo, taxa.tipo_taxa);
+                    const valorCalculado = calcularTaxa(taxa);
+
+                    return (
+                        <div
+                            key={taxa.codigo}
+                            className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-green-200"
+                        >
+                            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                <Icon className="w-4 h-4 text-green-600" />
+                                {taxa.nome}
+                            </span>
+                            <div className="text-right">
+                                <span className="text-sm font-bold text-green-700">
+                                    {taxa.tipo_taxa === "percentual"
+                                        ? `${taxa.valor}% ${formatarPeriodo(
+                                              taxa.periodo
+                                          )}`
+                                        : `R$ ${taxa.valor.toLocaleString(
+                                              "pt-BR",
+                                              { minimumFractionDigits: 2 }
+                                          )} ${formatarPeriodo(taxa.periodo)}`}
+                                </span>
+                                {valorBem > 0 &&
+                                    taxa.tipo_taxa === "percentual" && (
+                                        <div className="text-xs text-gray-600">
+                                            = R${" "}
+                                            {valorCalculado.toLocaleString(
+                                                "pt-BR",
+                                                { minimumFractionDigits: 2 }
+                                            )}
+                                        </div>
+                                    )}
+                            </div>
+                        </div>
+                    );
+                })
+            ) : (
+                // Fallback para taxas estáticas se não houver taxas dinâmicas
+                <>
+                    <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-green-200">
+                        <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-green-600" />
+                            Taxa Administrativa
+                        </span>
+                        <span className="text-sm font-bold text-green-700">
+                            {configTaxas.taxaAdministrativaAnual}% ao ano
+                        </span>
+                    </div>
+                </>
+            )}
+
+            <div className="p-3 bg-green-100/50 rounded-lg border border-green-200">
+                <p className="text-xs text-green-800 font-medium flex items-center gap-2">
+                    <Info className="w-3.5 h-3.5" />
+                    Parcelas fixas durante todo o período
+                </p>
+            </div>
+        </>
+    );
+};
+
+// Componente para exibir taxas dinâmicas do financiamento
+const TaxasFinanciamento = ({ config, configTaxas, valorBem, tipoBem }) => {
+    // Se não há taxas dinâmicas, usa as estáticas
+    if (!configTaxas) {
+        return (
+            <>
+                <div className="p-3 bg-blue-100/50 rounded-lg border border-blue-200 mb-3">
+                    <p className="text-xs text-blue-800 font-bold flex items-center gap-2">
+                        <Info className="w-3.5 h-3.5" />
+                        Sistema Price (parcelas fixas com juros)
+                    </p>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
+                    <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                        <TrendingUp className="w-4 h-4 text-blue-600" />
+                        Juros Base
+                    </span>
+                    <span className="text-sm font-bold text-blue-700">
+                        {config.taxaJurosAnualBase}% ao ano
+                    </span>
+                </div>
+            </>
+        );
+    }
+
+    // Usar taxas dinâmicas do banco de dados se disponíveis
+    const taxasFinanciamento = configTaxas.taxasFinanciamento || [];
+
+    // Função para obter ícone baseado no tipo de taxa
+    const getIcone = (codigo, tipoTaxa) => {
+        if (codigo.includes("juros")) return TrendingUp;
+        if (codigo.includes("seguro")) return Shield;
+        if (codigo.includes("licenciamento")) return Calendar;
+        if (codigo.includes("avaliacao")) return FileText;
+        if (codigo.includes("itbi")) return Receipt;
+        if (codigo.includes("entrada")) return DollarSign;
+        return tipoTaxa === "percentual" ? Percent : DollarSign;
+    };
+
+    // Função para calcular valor da taxa
+    const calcularTaxa = (taxa) => {
+        if (valorBem <= 0) return 0;
+
+        if (taxa.tipo_taxa === "percentual") {
+            return (valorBem * taxa.valor) / 100;
+        } else if (taxa.tipo_taxa === "fixo") {
+            return taxa.valor;
+        }
+        return 0;
+    };
+
+    // Função para formatar período
+    const formatarPeriodo = (periodo) => {
+        if (!periodo) return "";
+        if (periodo === "anual") return "ao ano";
+        if (periodo === "unico") return "único";
+        if (periodo === "mensal") return "ao mês";
+        return periodo;
+    };
+
+    return (
+        <>
+            <div className="p-3 bg-blue-100/50 rounded-lg border border-blue-200 mb-3">
+                <p className="text-xs text-blue-800 font-bold flex items-center gap-2">
+                    <Info className="w-3.5 h-3.5" />
+                    Sistema Price (parcelas fixas com juros)
+                </p>
+            </div>
+
+            {taxasFinanciamento.length > 0 ? (
+                taxasFinanciamento.map((taxa) => {
+                    const Icon = getIcone(taxa.codigo, taxa.tipo_taxa);
+                    const valorCalculado = calcularTaxa(taxa);
+
+                    return (
+                        <div
+                            key={taxa.codigo}
+                            className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200"
+                        >
+                            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                <Icon className="w-4 h-4 text-blue-600" />
+                                {taxa.nome}
+                            </span>
+                            <div className="text-right">
+                                <span className="text-sm font-bold text-blue-700">
+                                    {taxa.tipo_taxa === "percentual"
+                                        ? `${taxa.valor}% ${formatarPeriodo(
+                                              taxa.periodo
+                                          )}`
+                                        : `R$ ${taxa.valor.toLocaleString(
+                                              "pt-BR",
+                                              { minimumFractionDigits: 2 }
+                                          )} ${formatarPeriodo(taxa.periodo)}`}
+                                </span>
+                                {valorBem > 0 &&
+                                    taxa.tipo_taxa === "percentual" && (
+                                        <div className="text-xs text-gray-600">
+                                            = R${" "}
+                                            {valorCalculado.toLocaleString(
+                                                "pt-BR",
+                                                { minimumFractionDigits: 2 }
+                                            )}
+                                        </div>
+                                    )}
+                            </div>
+                        </div>
+                    );
+                })
+            ) : (
+                // Fallback para taxas estáticas se não houver taxas dinâmicas
+                <>
+                    <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
+                        <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-blue-600" />
+                            Juros Base
+                        </span>
+                        <span className="text-sm font-bold text-blue-700">
+                            {configTaxas.taxaJurosAnualBase}% ao ano
+                        </span>
+                    </div>
+                </>
+            )}
+        </>
     );
 };
 
