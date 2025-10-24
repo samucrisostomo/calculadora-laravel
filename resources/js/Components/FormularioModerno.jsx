@@ -234,80 +234,118 @@ const FormularioModerno = ({
                 <div
                     className={`${
                         tipo === "consorcio"
-                            ? "bg-green-50 border-green-200"
-                            : "bg-blue-50 border-blue-200"
-                    } border rounded-lg p-4 mt-6`}
+                            ? "bg-gradient-to-br from-green-50 to-emerald-50 border-green-300"
+                            : "bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-300"
+                    } border-2 rounded-xl p-5 mt-6 shadow-sm`}
                 >
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-4">
                         <h4
-                            className={`font-semibold ${
+                            className={`font-bold ${
                                 tipo === "consorcio"
                                     ? "text-green-800"
                                     : "text-blue-800"
-                            } text-sm flex items-center gap-2`}
+                            } text-base flex items-center gap-2`}
                         >
-                            <Info className="w-4 h-4" />
+                            <Info className="w-5 h-5" />
                             {tipo === "consorcio"
                                 ? "Taxas Aplicadas"
                                 : "Sistema de Cálculo"}
                         </h4>
                         {configTaxas && (
-                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-semibold">
-                                Taxas Atualizadas
-                            </span>
+                            <Badge className="bg-blue-500 text-white font-semibold flex items-center gap-1">
+                                <Sprout className="w-3 h-3" />
+                                Do Banco de Dados
+                            </Badge>
                         )}
                     </div>
-                    <ul
-                        className={`${
-                            tipo === "consorcio"
-                                ? "text-green-700"
-                                : "text-blue-700"
-                        } text-xs space-y-1`}
-                    >
+                    <div className="space-y-2.5">
                         {tipo === "consorcio" ? (
                             <>
-                                <li>
-                                    • Taxa administrativa:{" "}
-                                    {config.taxaAdministrativaAnual}% ao ano
-                                </li>
-                                <li>
-                                    • Comissão: {config.comissaoPercentual}% do
-                                    valor do bem
-                                </li>
-                                <li>• Parcelas fixas durante todo período</li>
+                                <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-green-200">
+                                    <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <TrendingUp className="w-4 h-4 text-green-600" />
+                                        Taxa Administrativa
+                                    </span>
+                                    <span className="text-sm font-bold text-green-700">
+                                        {config.taxaAdministrativaAnual}% ao ano
+                                    </span>
+                                </div>
+                                <div className="p-3 bg-green-100/50 rounded-lg border border-green-200">
+                                    <p className="text-xs text-green-800 font-medium flex items-center gap-2">
+                                        <Info className="w-3.5 h-3.5" />
+                                        Parcelas fixas durante todo o período
+                                    </p>
+                                </div>
                             </>
                         ) : (
                             <>
-                                <li>• Sistema Price (parcelas fixas)</li>
-                                <li>
-                                    • Juros base: {config.taxaJurosAnualBase}%
-                                    ao ano
-                                </li>
-                                <li>
-                                    • Seguro: {config.seguroAnualPercentual}% ao
-                                    ano
-                                </li>
+                                <div className="p-3 bg-blue-100/50 rounded-lg border border-blue-200 mb-3">
+                                    <p className="text-xs text-blue-800 font-bold flex items-center gap-2">
+                                        <Info className="w-3.5 h-3.5" />
+                                        Sistema Price (parcelas fixas com juros)
+                                    </p>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
+                                    <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <TrendingUp className="w-4 h-4 text-blue-600" />
+                                        Juros Base
+                                    </span>
+                                    <span className="text-sm font-bold text-blue-700">
+                                        {config.taxaJurosAnualBase}% ao ano
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
+                                    <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Building2 className="w-4 h-4 text-blue-600" />
+                                        Seguro
+                                    </span>
+                                    <span className="text-sm font-bold text-blue-700">
+                                        {config.seguroAnualPercentual}% ao ano
+                                    </span>
+                                </div>
                                 {tipoBem === "imovel" && (
                                     <>
-                                        <li>
-                                            • Taxa de avaliação:{" "}
-                                            {config.taxaAvaliacaoPercentual}%
-                                        </li>
-                                        <li>
-                                            • ITBI: {config.itbiPercentual}%
-                                            (custo inicial)
-                                        </li>
+                                        <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
+                                            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                                <DollarSign className="w-4 h-4 text-purple-600" />
+                                                Avaliação
+                                            </span>
+                                            <span className="text-sm font-bold text-blue-700">
+                                                {config.taxaAvaliacaoPercentual}
+                                                % (inicial)
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
+                                            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                                <Building2 className="w-4 h-4 text-purple-600" />
+                                                ITBI
+                                            </span>
+                                            <span className="text-sm font-bold text-blue-700">
+                                                {config.itbiPercentual}%
+                                                (inicial)
+                                            </span>
+                                        </div>
                                     </>
                                 )}
                                 {tipoBem === "carro" && (
-                                    <li>
-                                        • Licenciamento: R${" "}
-                                        {config.taxaLicenciamentoAnual}/ano
-                                    </li>
+                                    <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-blue-200">
+                                        <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                            <Calendar className="w-4 h-4 text-blue-600" />
+                                            Licenciamento
+                                        </span>
+                                        <span className="text-sm font-bold text-blue-700">
+                                            R${" "}
+                                            {config.taxaLicenciamentoAnual.toLocaleString(
+                                                "pt-BR",
+                                                { minimumFractionDigits: 2 }
+                                            )}
+                                            /ano
+                                        </span>
+                                    </div>
                                 )}
                             </>
                         )}
-                    </ul>
+                    </div>
                 </div>
             </CardContent>
         </Card>

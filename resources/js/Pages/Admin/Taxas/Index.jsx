@@ -309,31 +309,36 @@ export default function Index({ auth, taxas, flash }) {
                             title="Total"
                             value={stats.total}
                             icon={Zap}
-                            color="blue"
+                            bgColor="from-blue-500 to-blue-600"
+                            textColor="text-blue-600"
                         />
                         <StatCard
                             title="Ativas"
                             value={stats.ativos}
                             icon={CheckCircle2}
-                            color="green"
+                            bgColor="from-blue-500 to-blue-600"
+                            textColor="text-blue-600"
                         />
                         <StatCard
                             title="Inativas"
                             value={stats.inativos}
                             icon={PauseCircle}
-                            color="gray"
+                            bgColor="from-blue-500 to-blue-600"
+                            textColor="text-blue-600"
                         />
                         <StatCard
                             title="Carros"
                             value={stats.carros}
                             icon={Car}
-                            color="blue"
+                            bgColor="from-blue-500 to-blue-600"
+                            textColor="text-blue-600"
                         />
                         <StatCard
                             title="Imóveis"
                             value={stats.imoveis}
                             icon={Building2}
-                            color="purple"
+                            bgColor="from-blue-500 to-blue-600"
+                            textColor="text-blue-600"
                         />
                     </div>
 
@@ -764,28 +769,21 @@ export default function Index({ auth, taxas, flash }) {
 }
 
 // Componente de Card de Estatística
-function StatCard({ title, value, icon: Icon, color }) {
-    const colorClasses = {
-        blue: "from-blue-500 to-blue-600",
-        green: "from-green-500 to-green-600",
-        gray: "from-gray-500 to-gray-600",
-        purple: "from-purple-500 to-purple-600",
-    };
-
+function StatCard({ title, value, icon: Icon, bgColor, textColor }) {
     return (
-        <Card className="border-2 hover:border-blue-300 transition-all hover:shadow-md">
+        <Card className="border-2 hover:border-blue-400 transition-all hover:shadow-lg group">
             <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <p className="text-sm font-medium text-gray-600">
+                        <p className="text-sm font-medium text-gray-600 mb-1">
                             {title}
                         </p>
-                        <p className="text-3xl font-bold text-gray-900 mt-1">
+                        <p className="text-3xl font-bold text-gray-900 group-hover:scale-110 transition-transform">
                             {value}
                         </p>
                     </div>
                     <div
-                        className={`p-3 rounded-xl bg-gradient-to-br ${colorClasses[color]} shadow-lg`}
+                        className={`p-3 rounded-xl bg-gradient-to-br ${bgColor} shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all`}
                     >
                         <Icon className="w-6 h-6 text-white" />
                     </div>

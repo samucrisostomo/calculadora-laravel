@@ -74,7 +74,6 @@ const BotaoGerarPDF = ({ consorcio, financiamento, comparacao, tipoBem }) => {
                     "Taxa Administrativa:",
                     formatarMoeda(consorcio.taxaAdministrativa),
                 ],
-                ["Comissão:", formatarMoeda(consorcio.comissao)],
             ];
 
             dadosConsorcio.forEach(([label, value]) => {

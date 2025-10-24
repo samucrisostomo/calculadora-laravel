@@ -23,7 +23,7 @@ const Footer = () => {
                             Vantagens do Consórcio
                         </h3>
                         <ul className="text-gray-300 text-xs sm:text-sm space-y-2">
-                            <li>✓ Sem juros abusivos</li>
+                            <li>✓ Sem juros</li>
                             <li>✓ Parcelas fixas</li>
                             <li>✓ Menor custo total</li>
                             <li>✓ Flexibilidade de uso</li>

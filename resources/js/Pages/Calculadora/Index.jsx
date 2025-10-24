@@ -5,7 +5,6 @@ import HeaderModerno from "@/Components/HeaderModerno";
 import TipoSelectorModerno from "@/Components/TipoSelectorModerno";
 import FormularioModerno from "@/Components/FormularioModerno";
 import ResultadosModernos from "@/Components/ResultadosModernos";
-import GraficoComparativo from "@/Components/GraficoComparativo";
 import BotaoGerarPDF from "@/Components/BotaoGerarPDF";
 import Footer from "@/Components/Footer";
 import LoadingModerno from "@/Components/LoadingModerno";
@@ -322,11 +321,6 @@ export default function CalculadoraIndex() {
                                 comparacao={comparacao}
                             />
 
-                            <GraficoComparativo
-                                consorcio={resultadoConsorcio}
-                                financiamento={resultadoFinanciamento}
-                            />
-
                             <BotaoGerarPDF
                                 consorcio={resultadoConsorcio}
                                 financiamento={resultadoFinanciamento}
@@ -349,7 +343,7 @@ export default function CalculadoraIndex() {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                     {[
                                         {
-                                            title: "Sem Juros Abusivos",
+                                            title: "Sem Juros",
                                             desc: "No consórcio você não paga juros compostos. As taxas são transparentes e muito menores.",
                                         },
                                         {

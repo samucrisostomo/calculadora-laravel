@@ -150,11 +150,6 @@ const ResultadosModernos = ({ consorcio, financiamento, comparacao }) => {
                             valor={formatarMoeda(consorcio.taxaAdministrativa)}
                             icon={DollarSign}
                         />
-                        <ItemResultado
-                            label="Comissão"
-                            valor={formatarMoeda(consorcio.comissao)}
-                            icon={DollarSign}
-                        />
 
                         <Separator className="my-4" />
 
